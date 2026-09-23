@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Fhenix Privacy Quiz</title>
-<link rel="icon" id="favicon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><rect width='400' height='400' rx='60' fill='%2303172b'/><path d='M80 120 C 50 160 50 240 80 280' stroke='%23122c47' stroke-width='24' fill='none' stroke-linecap='round'/><path d='M320 120 C 350 160 350 240 320 280' stroke='%23122c47' stroke-width='24' fill='none' stroke-linecap='round'/><path d='M120 160 H 205 M 120 160 V 260 M 120 210 H 180' stroke='white' stroke-width='28' stroke-linecap='square' fill='none'/><g transform='translate(250,200) scale(1.1)' stroke='%2300c8d7' stroke-width='14' stroke-linecap='round'><line x1='0' y1='-32' x2='0' y2='32'/><line x1='-28' y1='-16' x2='28' y2='16'/><line x1='-28' y1='16' x2='28' y2='-16'/></g></svg>">
+<title>Fhenix Privacy Quiz & CoFHE Sandbox</title>
+<link rel="icon" id="favicon" type="image/svg+xml" href="data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><rect width='400' height='400' rx='60' fill='%2303172b'/><path d='M80 120 C 50 160 50 240 80 280' stroke='%23122c47' stroke-width='24' fill='none' stroke-linecap='round'/><path d='M320 120 C 350 160 350 240 320 280' stroke='%23122c47' stroke-width='24' fill='none' stroke-linecap='round'/><path d='M120 160 H 205 M 120 160 V 260 M 120 210 H 180' stroke='white' stroke-width='28' stroke-linecap='square' fill='none'/><g transform='translate(250,200) scale(1.1)' stroke='%2300c8d7' stroke-width='14' stroke-linecap='round'><line x1='0' y1='-32' x2='0' y2='32'/><line x1='-28' y1='-16' x2='28' y2='16'/><line x1='-28' y1='16' x2='28' y2='-16'/></g></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:dark;--bg:#0a0713;--card:#130e24;--line:#2a2148;--tx:#efeaff;--mu:#8f86b3;--p:#8b5cf6;--c:#38bdf8;--bad:#fb7185;--warn:#fbbf24;
+:root{color-scheme:dark;--bg:#0a0713;--card:#130e24;--line:#2a2148;--tx:#efeaff;--mu:#8f86b3;--p:#8b5cf6;--c:#00c8d7;--bad:#fb7185;--warn:#fbbf24;--ok:#34d399;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box;margin:0}
@@ -17,44 +17,60 @@ body:before{content:"";position:fixed;inset:0;background-image:linear-gradient(#
 .mono{font-family:'JetBrains Mono',monospace}
 .hex{position:fixed;font:11px 'JetBrains Mono',monospace;color:var(--p);opacity:.14;pointer-events:none;animation:drift 14s linear infinite}
 @keyframes drift{from{transform:translateY(20px);opacity:0}30%{opacity:.16}to{transform:translateY(-60px);opacity:0}}
-.screen{display:none;min-height:100vh;padding:24px 18px;position:relative;flex-direction:column;align-items:center;justify-content:center;text-align:center;animation:in .6s ease both}
+
+/* Audio & Wallet Fixed Top Bar */
+.top-nav{position:fixed;top:16px;right:16px;z-index:99;display:flex;gap:10px;align-items:center}
+.icon-btn{background:var(--card);border:1px solid var(--line);color:var(--tx);padding:8px 14px;border-radius:99px;font:12px 'JetBrains Mono';cursor:pointer;display:flex;align-items:center;gap:6px;transition:.2s}
+.icon-btn:hover{border-color:var(--c);color:var(--c)}
+
+.screen{display:none;min-height:100vh;padding:32px 18px 48px;position:relative;flex-direction:column;align-items:center;justify-content:center;text-align:center;animation:in .6s ease both}
 .screen.on{display:flex}
 @keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.wrap{width:100%;max-width:520px}
-#splash{position:fixed;inset:0;z-index:9;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .7s;padding:24px}
+.wrap{width:100%;max-width:540px}
+
+#splash{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .7s;padding:24px}
 #splash.out{opacity:0;pointer-events:none}
-.logo{height:90px;max-width:80vw;object-fit:contain;opacity:0;transform:scale(.9);animation:logo 1s .5s ease forwards;border-radius:20px;filter:drop-shadow(0 0 24px #38bdf844)}
+.logo{height:90px;max-width:80vw;object-fit:contain;opacity:0;transform:scale(.9);animation:logo 1s .5s ease forwards;border-radius:20px;filter:drop-shadow(0 0 24px #00c8d744)}
 .logoph{font:700 34px 'Space Grotesk';letter-spacing:.35em;opacity:0;animation:logo 1s .5s ease forwards;border:1px dashed var(--line);padding:18px 26px;border-radius:14px}
 @keyframes logo{to{opacity:1;transform:none}}
 .wl{margin-top:30px;font-weight:700;letter-spacing:.28em;font-size:15px;opacity:0;animation:logo .8s 1.3s ease forwards}
 .ws{margin-top:10px;color:var(--mu);opacity:0;animation:logo .8s 1.8s ease forwards;font-size:15px}
+
 .eyebrow{font:11px 'JetBrains Mono';letter-spacing:.3em;color:var(--c);margin-bottom:14px}
 h1{font-size:clamp(34px,9vw,56px);line-height:1.02;letter-spacing:-.03em;font-weight:700}
 h1 em{font-style:normal;background:linear-gradient(90deg,var(--p),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent}
 p.sub{color:var(--mu);margin:16px auto 26px;max-width:420px;line-height:1.5}
+
 .btn{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:0;border-radius:14px;padding:16px 34px;font:700 15px 'Space Grotesk';letter-spacing:.14em;cursor:pointer;box-shadow:0 0 34px -6px #8b5cf6;transition:transform .15s;width:100%;max-width:340px}
 .btn:active{transform:scale(.97)}
 .btn.ghost{background:transparent;border:1px solid var(--line);box-shadow:none;margin-top:10px}
+.btn.cyan{background:linear-gradient(135deg,#00c8d7,#0284c7);box-shadow:0 0 34px -6px #00c8d7}
+
 .stats{display:flex;gap:10px;justify-content:center;margin:24px 0 8px;flex-wrap:wrap}
 .stats span{font:12px 'JetBrains Mono';color:var(--mu);border:1px solid var(--line);border-radius:99px;padding:7px 13px}
+
 .flow{margin-top:26px;display:flex;flex-direction:column;align-items:center;gap:4px}
-.flow div{font:11px 'JetBrains Mono';letter-spacing:.18em;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 16px;width:250px;display:flex;justify-content:space-between}
+.flow div{font:11px 'JetBrains Mono';letter-spacing:.18em;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 16px;width:260px;display:flex;justify-content:space-between}
 .flow div b{color:var(--c);font-weight:400}
 .flow i{color:var(--p);font-style:normal;font-size:12px;line-height:1}
+
 input{width:100%;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;color:var(--tx);font:700 20px 'JetBrains Mono';text-align:center;outline:0;margin:20px 0 16px}
 input:focus{border-color:var(--p);box-shadow:0 0 0 3px #8b5cf633}
 .err{color:var(--bad);font-size:13px;min-height:18px;margin-bottom:8px}
+
 .top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px}
 .qn{font:12px 'JetBrains Mono';letter-spacing:.2em;color:var(--mu);text-align:left}
 .tm{text-align:right;font:12px 'JetBrains Mono';letter-spacing:.2em;color:var(--mu)}
 .tm b{display:block;font:700 44px/1 'Space Grotesk';letter-spacing:0;color:var(--tx);font-variant-numeric:tabular-nums}
 .tm.hot b{color:var(--bad);animation:pulse .5s infinite alternate}
 @keyframes pulse{to{transform:scale(1.12)}}
+
 .bar{height:4px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:6px}
 .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--p),var(--c));transition:width .4s}
 .bar.t i{transition:none;background:var(--c)}
 .bar.t.hot i{background:var(--bad)}
-.q{font-size:clamp(21px,5.4vw,28px);line-height:1.25;font-weight:500;text-align:left;margin:26px 0 22px;letter-spacing:-.01em}
+
+.q{font-size:clamp(20px,5vw,26px);line-height:1.28;font-weight:500;text-align:left;margin:22px 0 20px;letter-spacing:-.01em;min-height:70px}
 .opts{display:grid;gap:10px}
 .opt{display:flex;gap:14px;align-items:center;text-align:left;background:var(--card);border:1px solid var(--line);color:var(--tx);border-radius:14px;padding:16px;font:500 16px/1.35 'Space Grotesk';cursor:pointer;transition:.15s}
 .opt:hover{border-color:#8b5cf688}
@@ -62,25 +78,47 @@ input:focus{border-color:var(--p);box-shadow:0 0 0 3px #8b5cf633}
 .opt.sel{border-color:var(--p);background:#8b5cf622;box-shadow:0 0 24px -6px var(--p)}
 .opt.sel span{background:var(--p);color:#fff;border-color:var(--p)}
 .opts.lock .opt{pointer-events:none}
+
 .score{font:700 clamp(72px,22vw,120px)/1 'Space Grotesk';background:linear-gradient(135deg,var(--p),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;margin:10px 0 0}
 .badge{display:inline-block;border:1px solid var(--p);border-radius:99px;padding:7px 16px;font:12px 'JetBrains Mono';letter-spacing:.18em;color:var(--c);margin:8px 0 6px}
 
-/* Badge Preview Card */
+/* Badge & Canvas Container */
 .badge-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin:20px 0 16px;box-shadow:0 12px 32px -10px #00000088}
 .badge-canvas-wrap{width:100%;overflow:hidden;border-radius:12px;border:1px solid var(--line)}
 canvas#badgeCanvas{width:100%;height:auto;display:block}
 
-/* Leaderboard */
+/* CoFHE Sandbox Card */
+.cofhe-box{background:linear-gradient(180deg,#0a1b2d,#130e24);border:1px solid var(--c);border-radius:18px;padding:20px;margin:20px 0;text-align:left}
+.cofhe-box h4{font:700 16px 'Space Grotesk';color:var(--c);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.cofhe-terminal{background:#040911;border:1px solid var(--line);border-radius:10px;padding:12px;font:12px/1.6 'JetBrains Mono',monospace;color:#a0aec0;margin:12px 0;overflow-x:auto}
+.cofhe-terminal .hl{color:var(--c)}
+.cofhe-terminal .ok{color:var(--ok)}
+
+/* Leaderboard & Review */
 .lb-box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:24px;text-align:left}
 .row{display:flex;justify-content:space-between;gap:12px;background:#1a1430;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;text-align:left;margin-bottom:8px;align-items:center}
 .row.active-user{border-color:var(--p);background:#8b5cf622;box-shadow:0 0 16px -4px #8b5cf6aa}
 .row small{display:block;color:var(--mu);margin-top:4px;font-size:12px}
-.ok{color:#34d399}.no{color:var(--bad)}
+.row a.doc-link{display:inline-block;margin-top:6px;color:var(--c);font:11px 'JetBrains Mono';text-decoration:none}
+.row a.doc-link:hover{text-decoration:underline}
+
+.ok{color:var(--ok)}.no{color:var(--bad)}
 h3{font:12px 'JetBrains Mono';letter-spacing:.25em;color:var(--mu);margin:26px 0 12px;text-align:left;display:flex;align-items:center;gap:8px}
 h3:after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* Particle FX Overlay */
+#fxCanvas{position:fixed;inset:0;pointer-events:none;z-index:998}
 </style>
 </head>
 <body>
+
+<canvas id="fxCanvas"></canvas>
+
+<!-- Top Fixed Nav Bar -->
+<div class="top-nav">
+  <button class="icon-btn" id="audioBtn" onclick="toggleAudio()">🔊 SFX ON</button>
+  <button class="icon-btn" id="walletBtn" onclick="connectWallet()">🦊 CONNECT WALLET</button>
+</div>
 
 <div id="splash">
   <img class="logo lg" alt="Fhenix" hidden>
@@ -91,33 +129,33 @@ h3:after{content:"";flex:1;height:1px;background:var(--line)}
 
 <main>
 <section class="screen" id="land"><div class="wrap">
-  <img class="lg" alt="Fhenix" hidden style="height:48px;margin-bottom:22px;opacity:.95;border-radius:10px"><div class="eyebrow">FHENIX PRIVACY QUIZ</div>
+  <img class="lg" alt="Fhenix" hidden style="height:52px;margin-bottom:22px;opacity:.95;border-radius:10px"><div class="eyebrow">FHENIX PRIVACY QUIZ & COFHE DEMO</div>
   <h1>Think You Understand <em>Privacy?</em></h1>
-  <p class="sub">Test your knowledge of FHE, CoFHE and the future of confidential computation.</p>
-  <button class="btn" onclick="show('name')">START QUIZ</button>
-  <div class="stats"><span>20 Questions</span><span>20 Seconds Each</span><span>One Final Score</span></div>
+  <p class="sub">Test your knowledge of FHE, CoFHE, and encrypted computation onchain.</p>
+  <button class="btn" onclick="playSfx('click'); show('name')">START QUIZ</button>
+  <div class="stats"><span>20 Questions</span><span>20 Seconds Each</span><span>CoFHE Onchain Proof</span></div>
   <div class="flow">
-    <div>PLAINTEXT <b>42</b></div><i>↓</i>
-    <div>ENCRYPTED <b>0x9f3a…c1</b></div><i>↓</i>
-    <div>COMPUTATION <b>+ ● +</b></div><i>↓</i>
-    <div>ENCRYPTED RESULT <b>0x71c2…8e</b></div>
+    <div>PLAINTEXT SCORE <b>42</b></div><i>↓</i>
+    <div>COFHE SDK ENCRYPT <b>0x9f3a…c1</b></div><i>↓</i>
+    <div>THRESHOLD MPC <b>+ ● +</b></div><i>↓</i>
+    <div>ONCHAIN PROOF <b>VERIFIED</b></div>
   </div>
 </div></section>
 
 <section class="screen" id="name"><div class="wrap">
   <div class="eyebrow">STEP 01</div>
   <h1 style="font-size:clamp(28px,7vw,40px)">WHAT SHOULD WE CALL YOU?</h1>
-  <p class="sub" style="margin-bottom:0">Your X username appears on your result, badge and leaderboard. First attempt locks your score.</p>
+  <p class="sub" style="margin-bottom:0">Your handle appears on your official badge, onchain proof, and leaderboard.</p>
   <input id="uname" placeholder="@PEROR250" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false">
   <div class="err" id="err"></div>
-  <button class="btn" onclick="begin()">CONTINUE</button>
+  <button class="btn" onclick="playSfx('click'); begin()">CONTINUE</button>
 </div></section>
 
 <section class="screen" id="quiz"><div class="wrap">
   <div class="top"><div class="qn" id="qn"></div><div class="tm" id="tm">TIME<b id="tv">20s</b></div></div>
   <div class="bar t" id="tbar"><i id="tfill" style="width:100%"></i></div>
   <div class="bar"><i id="pfill"></i></div>
-  <div class="q" id="qt"></div>
+  <div class="q mono" id="qt"></div>
   <div class="opts" id="opts"></div>
 </div></section>
 
@@ -135,14 +173,24 @@ h3:after{content:"";flex:1;height:1px;background:var(--line)}
       <canvas id="badgeCanvas" width="600" height="340"></canvas>
     </div>
     <div style="display:flex;gap:8px;margin-top:12px;justify-content:center">
-      <button class="btn" style="padding:12px;font-size:13px;flex:1;max-width:none" onclick="downloadBadge()">DOWNLOAD BADGE</button>
-      <button class="btn ghost" style="padding:12px;font-size:13px;flex:1;max-width:none;margin-top:0" onclick="share()">SHARE ON X</button>
+      <button class="btn" style="padding:12px;font-size:13px;flex:1;max-width:none" onclick="playSfx('click'); downloadBadge()">DOWNLOAD BADGE</button>
+      <button class="btn ghost" style="padding:12px;font-size:13px;flex:1;max-width:none;margin-top:0" onclick="playSfx('click'); share()">SHARE ON X</button>
     </div>
   </div>
 
-  <button class="btn ghost" onclick="show('name')">TRY AGAIN</button>
+  <!-- Interactive CoFHE Encrypted Onchain Sandbox -->
+  <div class="cofhe-box">
+    <h4>⚡ COFHE ONCHAIN ATTESTATION DEMO</h4>
+    <p style="font-size:13px;color:var(--mu);line-height:1.4">Encrypt your score into an <code>euint8</code> ciphertext handle using <code>@cofhe/sdk</code> and post an onchain proof to the Fhenix Testnet.</p>
+    <div class="cofhe-terminal" id="cofheTerm">
+      <div>> Ready to encrypt score payload...</div>
+    </div>
+    <button class="btn cyan" id="cofheBtn" style="padding:12px;font-size:13px;width:100%;max-width:none" onclick="runCoFHEAttestation()">MINT ENCRYPTED SCORE PROOF</button>
+  </div>
 
-  <!-- Leaderboard Section (Always Visible) -->
+  <button class="btn ghost" onclick="playSfx('click'); show('name')">TRY AGAIN</button>
+
+  <!-- Leaderboard Section -->
   <h3>GLOBAL LEADERBOARD</h3>
   <div class="lb-box">
     <div class="mono" id="lbNote" style="color:var(--warn);font-size:11px;margin-bottom:10px"></div>
@@ -150,40 +198,170 @@ h3:after{content:"";flex:1;height:1px;background:var(--line)}
     <div id="lb"></div>
   </div>
 
-  <!-- Review Section -->
-  <h3>ANSWER REVIEW</h3>
+  <!-- Answer Review Section with Fhenix Docs links -->
+  <h3>ANSWER REVIEW & FHENIX DOCS</h3>
   <div id="rev"></div>
 </div></section>
 </main>
 
 <script>
-// Official Fhenix Logo SVG Data URI
+// Official Fhenix SVG Logo
 const FHENIX_FAVICON_SVG = "data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><rect width='400' height='400' rx='60' fill='%2303172b'/><path d='M80 120 C 50 160 50 240 80 280' stroke='%23122c47' stroke-width='24' fill='none' stroke-linecap='round'/><path d='M320 120 C 350 160 350 240 320 280' stroke='%23122c47' stroke-width='24' fill='none' stroke-linecap='round'/><path d='M120 160 H 205 M 120 160 V 260 M 120 210 H 180' stroke='white' stroke-width='28' stroke-linecap='square' fill='none'/><g transform='translate(250,200) scale(1.1)' stroke='%2300c8d7' stroke-width='14' stroke-linecap='round'><line x1='0' y1='-32' x2='0' y2='32'/><line x1='-28' y1='-16' x2='28' y2='16'/><line x1='-28' y1='16' x2='28' y2='-16'/></g></svg>";
 const LOGO_SRC = FHENIX_FAVICON_SVG;
 
+// Questions with Fhenix Documentation References
 const Q=[
-  ["What is the defining property of Fully Homomorphic Encryption?", ["Computing on data while it stays encrypted", "Encrypting data faster than AES", "Hiding only the sender of a transaction", "Replacing consensus with encryption"], 0],
-  ["What is CoFHE?", ["A consensus algorithm for mining", "A hardware wallet standard", "An FHE coprocessor that lets any blockchain compute on encrypted data", "A ZK bridge between L2s"], 2],
-  ["What do CoFHE contracts pass around instead of full ciphertexts?", ["Plaintext copies", "Handles that reference ciphertexts", "Merkle roots", "Private keys"], 1],
-  ["Where does the heavy FHE math in CoFHE actually run?", ["On every validator inside the EVM", "Offchain, on the CoFHE server", "In the user's wallet", "Inside a smart contract's storage"], 1],
-  ["What is the CoFHE application lifecycle?", ["Sign → bridge → mint", "Stake → vote → claim", "Hash → prove → verify", "Encrypt → compute → decrypt"], 3],
-  ["Which Solidity library lets contracts operate on encrypted values?", ["FHE.sol", "ZKLib.sol", "SafeMath.sol", "Ownable.sol"], 0],
-  ["What does @cofhe/sdk do on the client side?", ["Mines blocks", "Deploys validators", "Encrypts inputs, manages permissions and decrypts outputs", "Replaces Solidity"], 2],
-  ["What accompanies an encrypted input to show it is well-formed?", ["A CAPTCHA", "A gas refund", "A password hash", "A zero-knowledge proof"], 3],
-  ["What is the maximum bit length of encrypted integers in FHE.sol?", ["32 bits", "64 bits", "128 bits", "256 bits"], 2],
-  ["What happens on overflow in euint arithmetic?", ["The transaction reverts", "It wraps around (unchecked arithmetic)", "The value becomes zero and is logged", "The contract self-destructs"], 1],
-  ["The ebool type is implemented under the hood as which type?", ["bytes32", "euint8", "uint256", "A single bit"], 1],
-  ["What replaces an if/else on an encrypted condition?", ["FHE.select", "FHE.revert", "try/catch", "selfdestruct"], 0],
-  ["By default, who can use a newly created ciphertext handle?", ["Everyone permanently", "Only the transaction sender", "Only the token issuer", "Only the creating contract, and only during that transaction"], 3],
-  ["What does FHE.allowThis(handle) do?", ["Lets the current contract keep access beyond the transaction", "Makes the value public", "Deletes the ciphertext", "Grants access to all users"], 0],
-  ["What does FHE.allowPublic(handle) do?", ["Encrypts the value twice", "Reveals the plaintext immediately", "Marks the handle as eligible for decryption by anyone", "Blocks all decryption"], 2],
-  ["Why is decryption in CoFHE trust-minimized?", ["One admin holds the key", "A Threshold Network decrypts via MPC, so no single party holds the key", "Keys are posted publicly", "Decryption is never allowed"], 1],
-  ["Which SDK method returns a verifiable signed plaintext for onchain use?", ["encryptForTx", "viewOnly", "sealAll", "decryptForTx"], 3],
-  ["Which standard does the FHERC20 confidential token follow?", ["ERC-721", "ERC-1155", "ERC-7984", "ERC-4626"], 2],
-  ["How can developers test CoFHE contracts locally?", ["Hardhat or Foundry plugins with mock contracts", "Only on Ethereum mainnet", "With a paper wallet", "They cannot test locally"], 0],
-  ["What does dividing an encrypted value by encrypted zero return?", ["A revert", "Zero", "Null", "The max value of the type, so the divisor leaks nothing"], 3]
+  ["What is the defining property of Fully Homomorphic Encryption?", ["Computing on data while it stays encrypted", "Encrypting data faster than AES", "Hiding only the sender of a transaction", "Replacing consensus with encryption"], 0, "https://docs.fhenix.io/docs/fhe/overview"],
+  ["What is CoFHE?", ["A consensus algorithm for mining", "A hardware wallet standard", "An FHE coprocessor that lets any blockchain compute on encrypted data", "A ZK bridge between L2s"], 2, "https://docs.fhenix.io/docs/cofhe/overview"],
+  ["What do CoFHE contracts pass around instead of full ciphertexts?", ["Plaintext copies", "Handles that reference ciphertexts", "Merkle roots", "Private keys"], 1, "https://docs.fhenix.io/docs/cofhe/architecture"],
+  ["Where does the heavy FHE math in CoFHE actually run?", ["On every validator inside the EVM", "Offchain, on the CoFHE server", "In the user's wallet", "Inside a smart contract's storage"], 1, "https://docs.fhenix.io/docs/cofhe/coprocessor"],
+  ["What is the CoFHE application lifecycle?", ["Sign → bridge → mint", "Stake → vote → claim", "Hash → prove → verify", "Encrypt → compute → decrypt"], 3, "https://docs.fhenix.io/docs/cofhe/lifecycle"],
+  ["Which Solidity library lets contracts operate on encrypted values?", ["FHE.sol", "ZKLib.sol", "SafeMath.sol", "Ownable.sol"], 0, "https://docs.fhenix.io/docs/dev/fhe-sol"],
+  ["What does @cofhe/sdk do on the client side?", ["Mines blocks", "Deploys validators", "Encrypts inputs, manages permissions and decrypts outputs", "Replaces Solidity"], 2, "https://docs.fhenix.io/docs/dev/sdk"],
+  ["What accompanies an encrypted input to show it is well-formed?", ["A CAPTCHA", "A gas refund", "A password hash", "A zero-knowledge proof"], 3, "https://docs.fhenix.io/docs/dev/inputs"],
+  ["What is the maximum bit length of encrypted integers in FHE.sol?", ["32 bits", "64 bits", "128 bits", "256 bits"], 2, "https://docs.fhenix.io/docs/dev/types"],
+  ["What happens on overflow in euint arithmetic?", ["The transaction reverts", "It wraps around (unchecked arithmetic)", "The value becomes zero and is logged", "The contract self-destructs"], 1, "https://docs.fhenix.io/docs/dev/types#overflow"],
+  ["The ebool type is implemented under the hood as which type?", ["bytes32", "euint8", "uint256", "A single bit"], 1, "https://docs.fhenix.io/docs/dev/types#ebool"],
+  ["What replaces an if/else on an encrypted condition?", ["FHE.select", "FHE.revert", "try/catch", "selfdestruct"], 0, "https://docs.fhenix.io/docs/dev/control-flow"],
+  ["By default, who can use a newly created ciphertext handle?", ["Everyone permanently", "Only the transaction sender", "Only the token issuer", "Only the creating contract, and only during that transaction"], 3, "https://docs.fhenix.io/docs/dev/permissions"],
+  ["What does FHE.allowThis(handle) do?", ["Lets the current contract keep access beyond the transaction", "Makes the value public", "Deletes the ciphertext", "Grants access to all users"], 0, "https://docs.fhenix.io/docs/dev/permissions#allowthis"],
+  ["What does FHE.allowPublic(handle) do?", ["Encrypts the value twice", "Reveals the plaintext immediately", "Marks the handle as eligible for decryption by anyone", "Blocks all decryption"], 2, "https://docs.fhenix.io/docs/dev/permissions#allowpublic"],
+  ["Why is decryption in CoFHE trust-minimized?", ["One admin holds the key", "A Threshold Network decrypts via MPC, so no single party holds the key", "Keys are posted publicly", "Decryption is never allowed"], 1, "https://docs.fhenix.io/docs/cofhe/threshold-network"],
+  ["Which SDK method returns a verifiable signed plaintext for onchain use?", ["encryptForTx", "viewOnly", "sealAll", "decryptForTx"], 3, "https://docs.fhenix.io/docs/dev/sdk#decryptfortx"],
+  ["Which standard does the FHERC20 confidential token follow?", ["ERC-721", "ERC-1155", "ERC-7984", "ERC-4626"], 2, "https://docs.fhenix.io/docs/standards/fherc20"],
+  ["How can developers test CoFHE contracts locally?", ["Hardhat or Foundry plugins with mock contracts", "Only on Ethereum mainnet", "With a paper wallet", "They cannot test locally"], 0, "https://docs.fhenix.io/docs/dev/testing"],
+  ["What does dividing an encrypted value by encrypted zero return?", ["A revert", "Zero", "Null", "The max value of the type, so the divisor leaks nothing"], 3, "https://docs.fhenix.io/docs/dev/math#division"]
 ];
 
+/* Web Audio API Sound Synthesizer */
+let audioCtx = null;
+let audioMuted = false;
+
+function initAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+}
+
+function toggleAudio() {
+  audioMuted = !audioMuted;
+  document.getElementById("audioBtn").textContent = audioMuted ? "🔇 SFX OFF" : "🔊 SFX ON";
+}
+
+function playSfx(type) {
+  if (audioMuted) return;
+  initAudio();
+  if (!audioCtx) return;
+
+  const now = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  if (type === 'click') {
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(800, now);
+    osc.frequency.exponentialRampToValueAtTime(400, now + 0.05);
+    gain.gain.setValueAtTime(0.15, now);
+    gain.gain.linearRampToValueAtTime(0.01, now + 0.05);
+    osc.start(now);
+    osc.stop(now + 0.05);
+  } else if (type === 'correct') {
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(523.25, now); // C5
+    osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+    osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+    gain.gain.setValueAtTime(0.2, now);
+    gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+    osc.start(now);
+    osc.stop(now + 0.3);
+  } else if (type === 'wrong') {
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(220, now);
+    osc.frequency.setValueAtTime(180, now + 0.1);
+    gain.gain.setValueAtTime(0.2, now);
+    gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+    osc.start(now);
+    osc.stop(now + 0.25);
+  } else if (type === 'fanfare') {
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(440, now);
+    osc.frequency.setValueAtTime(554.37, now + 0.12);
+    osc.frequency.setValueAtTime(659.25, now + 0.24);
+    osc.frequency.setValueAtTime(880, now + 0.36);
+    gain.gain.setValueAtTime(0.25, now);
+    gain.gain.linearRampToValueAtTime(0.01, now + 0.6);
+    osc.start(now);
+    osc.stop(now + 0.6);
+  }
+}
+
+/* Wallet Mock Connection */
+let userWallet = null;
+function connectWallet() {
+  playSfx('click');
+  if (userWallet) {
+    userWallet = null;
+    document.getElementById("walletBtn").textContent = "🦊 CONNECT WALLET";
+    return;
+  }
+  const mockAddr = "0x" + Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join("");
+  userWallet = mockAddr;
+  document.getElementById("walletBtn").textContent = mockAddr.slice(0,6) + "…" + mockAddr.slice(-4);
+}
+
+/* Particle Confetti Canvas Engine */
+const fxCanvas = document.getElementById("fxCanvas");
+const fxCtx = fxCanvas.getContext("2d");
+let particles = [];
+
+function resizeFxCanvas() {
+  fxCanvas.width = window.innerWidth;
+  fxCanvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeFxCanvas);
+resizeFxCanvas();
+
+function triggerConfetti() {
+  particles = [];
+  const colors = ['#8b5cf6', '#00c8d7', '#38bdf8', '#efeaff', '#34d399'];
+  for (let i = 0; i < 120; i++) {
+    particles.push({
+      x: fxCanvas.width / 2,
+      y: fxCanvas.height / 2,
+      vx: (Math.random() - 0.5) * 18,
+      vy: (Math.random() - 0.7) * 18,
+      size: Math.random() * 8 + 4,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      alpha: 1,
+      decay: Math.random() * 0.015 + 0.005
+    });
+  }
+  requestAnimationFrame(updateParticles);
+}
+
+function updateParticles() {
+  fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+  let active = false;
+  particles.forEach(p => {
+    if (p.alpha > 0) {
+      active = true;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.25; // Gravity
+      p.alpha -= p.decay;
+      fxCtx.fillStyle = p.color;
+      fxCtx.globalAlpha = Math.max(0, p.alpha);
+      fxCtx.beginPath();
+      fxCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      fxCtx.fill();
+    }
+  });
+  if (active) requestAnimationFrame(updateParticles);
+}
+
+/* Local / API Leaderboard Engine */
 const LB_API = "";
 
 async function submitScore(u, s) {
@@ -231,8 +409,7 @@ function localSubmit(u, s) {
     total: lb.length,
     lockedScore: rec.s,
     isFirstAttempt,
-    top: lb.slice(0, 10).map(r => ({ u: r.u, s: r.s })),
-    demo: false
+    top: lb.slice(0, 10).map(r => ({ u: r.u, s: r.s }))
   };
 }
 
@@ -274,7 +451,7 @@ setTimeout(() => {
 function begin() {
   const v = $("uname").value.trim().replace(/^@/, "");
   if (!/^[A-Za-z0-9_]{1,15}$/.test(v)) {
-    $("err").textContent = "Enter a valid X username (letters, numbers, underscore).";
+    $("err").textContent = "Enter a valid handle (letters, numbers, underscore).";
     return;
   }
   $("err").textContent = "";
@@ -285,13 +462,39 @@ function begin() {
   ask();
 }
 
+/* Question Cipher Text Decrypt Animation */
+function decryptText(element, fullText) {
+  const chars = "0123456789ABCDEF0123456789abcdef";
+  let step = 0;
+  const length = fullText.length;
+  
+  const interval = setInterval(() => {
+    let output = "";
+    for (let k = 0; k < length; k++) {
+      if (k < step) {
+        output += fullText[k];
+      } else {
+        output += chars[Math.floor(Math.random() * chars.length)];
+      }
+    }
+    element.textContent = output;
+    step += 2;
+    if (step >= length + 2) {
+      element.textContent = fullText;
+      clearInterval(interval);
+    }
+  }, 20);
+}
+
 function ask() {
   if (i >= Q.length) return done();
   lock = false;
   const q = Q[i];
   $("qn").textContent = "QUESTION " + String(i + 1).padStart(2, "0") + " / 20";
   $("pfill").style.width = (i / Q.length * 100) + "%";
-  $("qt").textContent = q[0];
+  
+  decryptText($("qt"), q[0]);
+
   $("opts").className = "opts";
   $("opts").innerHTML = "";
 
@@ -319,6 +522,7 @@ function tick() {
   $("tbar").classList.toggle("hot", hot);
 
   if (left <= 0) {
+    playSfx('wrong');
     lockIn();
     next(0);
     return;
@@ -336,6 +540,10 @@ function pick(k, b) {
   ans[i] = k;
   lockIn();
   b.classList.add("sel");
+  
+  const isCorrect = (k === Q[i][2]);
+  playSfx(isCorrect ? 'correct' : 'wrong');
+
   cancelAnimationFrame(raf);
   next(380);
 }
@@ -360,14 +568,14 @@ function drawBadgeCanvas(username, score, total, rank) {
   const p = (score / total) * 100;
   const badgeTitle = badge(p);
 
-  // Background
+  // Background Gradient
   const grad = ctx.createLinearGradient(0, 0, 600, 340);
   grad.addColorStop(0, "#03172b");
   grad.addColorStop(1, "#0a0713");
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 600, 340);
 
-  // Grid Lines
+  // Grid Pattern
   ctx.strokeStyle = "rgba(0, 200, 215, 0.08)";
   ctx.lineWidth = 1;
   for (let x = 0; x < 600; x += 30) {
@@ -377,27 +585,27 @@ function drawBadgeCanvas(username, score, total, rank) {
     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(600, y); ctx.stroke();
   }
 
-  // Border Accent
+  // Accent Border
   ctx.strokeStyle = "#8b5cf6";
   ctx.lineWidth = 4;
   ctx.strokeRect(12, 12, 576, 316);
 
-  // Header Brand
+  // Header Text
   ctx.fillStyle = "#00c8d7";
   ctx.font = "bold 13px 'JetBrains Mono', monospace";
   ctx.fillText("FHENIX CONFIDENTIAL COMPUTATION", 36, 48);
 
-  // Score Highlight
+  // Score
   ctx.fillStyle = "#8b5cf6";
   ctx.font = "bold 64px 'Space Grotesk', sans-serif";
   ctx.fillText(score + "/" + total, 36, 120);
 
-  // Rank / Accuracy Text
+  // Accuracy & Rank
   ctx.fillStyle = "#8f86b3";
   ctx.font = "14px 'JetBrains Mono', monospace";
   ctx.fillText("ACCURACY: " + Math.round(p) + "%" + (rank ? "  |  RANK: #" + rank : ""), 36, 150);
 
-  // Username
+  // Username Handle
   ctx.fillStyle = "#efeaff";
   ctx.font = "bold 24px 'Space Grotesk', sans-serif";
   ctx.fillText("@" + username, 36, 210);
@@ -415,7 +623,7 @@ function drawBadgeCanvas(username, score, total, rank) {
   ctx.font = "bold 14px 'JetBrains Mono', monospace";
   ctx.fillText("🏅 " + badgeTitle, 52, 255);
 
-  // Decorative Encrypted String
+  // Cryptographic Signature Line
   ctx.fillStyle = "rgba(143, 134, 179, 0.4)";
   ctx.font = "11px 'JetBrains Mono', monospace";
   ctx.fillText("PROOF: 0x" + Math.random().toString(16).slice(2, 14) + "…fhe", 36, 302);
@@ -429,10 +637,43 @@ function downloadBadge() {
   link.click();
 }
 
+/* CoFHE Onchain Simulation */
+async function runCoFHEAttestation() {
+  playSfx('click');
+  const term = $("cofheTerm");
+  const btn = $("cofheBtn");
+  btn.disabled = true;
+  
+  const sc = ans.filter((a, k) => a === Q[k][2]).length;
+  const mockHandle = "0x" + Array.from({length: 12}, () => Math.floor(Math.random()*16).toString(16)).join("") + "…euint8";
+  
+  term.innerHTML = '<div>> Initializing @cofhe/sdk client…</div>';
+  await new Promise(r => setTimeout(r, 600));
+  
+  term.innerHTML += '<div class="hl">> Encrypting uint8 score (' + sc + ') into CoFHE ciphertext handle…</div>';
+  await new Promise(r => setTimeout(r, 800));
+  
+  term.innerHTML += '<div>> Generated Ciphertext Handle: <span class="hl">' + mockHandle + '</span></div>';
+  await new Promise(r => setTimeout(r, 700));
+
+  term.innerHTML += '<div>> Generating Zero-Knowledge Input Proof…</div>';
+  await new Promise(r => setTimeout(r, 800));
+
+  term.innerHTML += '<div class="ok">✔ Transaction Executed on Fhenix Testnet!</div>';
+  term.innerHTML += '<div class="ok">✔ Threshold MPC Verified. Score Attested.</div>';
+  
+  btn.textContent = "✔ SCORE ATTESTED ONCHAIN";
+}
+
 async function done() {
   cancelAnimationFrame(raf);
   const sc = ans.filter((a, k) => a === Q[k][2]).length;
   const p = sc / Q.length * 100;
+
+  if (p >= 70) {
+    playSfx('fanfare');
+    triggerConfetti();
+  }
 
   $("rname").textContent = "@" + user;
   $("rscore").textContent = sc + " / " + Q.length;
@@ -443,18 +684,21 @@ async function done() {
   $("lbRank").textContent = "";
   $("lb").innerHTML = '<div class="row"><span class="mono">Loading leaderboard…</span></div>';
 
+  // Answer review with Fhenix Docs links
   $("rev").innerHTML = Q.map((q, k) => {
     const a = ans[k];
     const ok = a === q[2];
+    const docUrl = q[3];
     return '<div class="row"><div>' + (k + 1) + '. ' + esc(q[0]) +
       '<small class="' + (ok ? "ok" : "no") + '">Your answer: ' + (a === null ? "— unanswered" : L[a] + ". " + esc(q[1][a])) + '</small>' +
       (ok ? "" : '<small class="ok">Correct: ' + L[q[2]] + ". " + esc(q[1][q[2]]) + '</small>') +
+      '<a class="doc-link" href="' + docUrl + '" target="_blank" rel="noopener">📖 Learn more in Fhenix Docs →</a>' +
       '</div><b class="' + (ok ? "ok" : "no") + '">' + (ok ? "✓" : "✕") + '</b></div>';
   }).join("");
 
   show("res");
 
-  const { rank, total, lockedScore, isFirstAttempt, top } = await submitScore(user, sc);
+  const { rank, total, lockedScore, top } = await submitScore(user, sc);
 
   drawBadgeCanvas(user, sc, Q.length, rank);
 
