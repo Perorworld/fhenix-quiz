@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Fhenix Privacy Quiz</title>
-<link rel="icon" id="favicon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23130e24'/><path d='M25 25h50v12H37v14h32v12H37v24H25V25z' fill='%238b5cf6'/><circle cx='70' cy='69' r='6' fill='%2338bdf8'/></svg>">
+<link rel="icon" id="favicon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><rect width='400' height='400' rx='60' fill='%2303172b'/><path d='M80 120 C 50 160 50 240 80 280' stroke='%23122c47' stroke-width='24' fill='none' stroke-linecap='round'/><path d='M320 120 C 350 160 350 240 320 280' stroke='%23122c47' stroke-width='24' fill='none' stroke-linecap='round'/><path d='M120 160 H 205 M 120 160 V 260 M 120 210 H 180' stroke='white' stroke-width='28' stroke-linecap='square' fill='none'/><g transform='translate(250,200) scale(1.1)' stroke='%2300c8d7' stroke-width='14' stroke-linecap='round'><line x1='0' y1='-32' x2='0' y2='32'/><line x1='-28' y1='-16' x2='28' y2='16'/><line x1='-28' y1='16' x2='28' y2='-16'/></g></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{color-scheme:dark;--bg:#0a0713;--card:#130e24;--line:#2a2148;--tx:#efeaff;--mu:#8f86b3;--p:#8b5cf6;--c:#38bdf8;--bad:#fb7185;--warn:#fbbf24;
@@ -23,7 +23,7 @@ body:before{content:"";position:fixed;inset:0;background-image:linear-gradient(#
 .wrap{width:100%;max-width:520px}
 #splash{position:fixed;inset:0;z-index:9;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .7s;padding:24px}
 #splash.out{opacity:0;pointer-events:none}
-.logo{height:70px;max-width:80vw;object-fit:contain;opacity:0;transform:scale(.9);animation:logo 1s .5s ease forwards;filter:drop-shadow(0 0 24px #8b5cf688)}
+.logo{height:90px;max-width:80vw;object-fit:contain;opacity:0;transform:scale(.9);animation:logo 1s .5s ease forwards;border-radius:20px;filter:drop-shadow(0 0 24px #38bdf844)}
 .logoph{font:700 34px 'Space Grotesk';letter-spacing:.35em;opacity:0;animation:logo 1s .5s ease forwards;border:1px dashed var(--line);padding:18px 26px;border-radius:14px}
 @keyframes logo{to{opacity:1;transform:none}}
 .wl{margin-top:30px;font-weight:700;letter-spacing:.28em;font-size:15px;opacity:0;animation:logo .8s 1.3s ease forwards}
@@ -91,7 +91,7 @@ h3:after{content:"";flex:1;height:1px;background:var(--line)}
 
 <main>
 <section class="screen" id="land"><div class="wrap">
-  <img class="lg" alt="Fhenix" hidden style="height:34px;margin-bottom:22px;opacity:.9"><div class="eyebrow">FHENIX PRIVACY QUIZ</div>
+  <img class="lg" alt="Fhenix" hidden style="height:48px;margin-bottom:22px;opacity:.95;border-radius:10px"><div class="eyebrow">FHENIX PRIVACY QUIZ</div>
   <h1>Think You Understand <em>Privacy?</em></h1>
   <p class="sub">Test your knowledge of FHE, CoFHE and the future of confidential computation.</p>
   <button class="btn" onclick="show('name')">START QUIZ</button>
@@ -157,7 +157,8 @@ h3:after{content:"";flex:1;height:1px;background:var(--line)}
 </main>
 
 <script>
-const FHENIX_FAVICON_SVG = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23130e24'/><path d='M25 25h50v12H37v14h32v12H37v24H25V25z' fill='%238b5cf6'/><circle cx='70' cy='69' r='6' fill='%2338bdf8'/></svg>";
+// Official Fhenix Logo SVG Data URI
+const FHENIX_FAVICON_SVG = "data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><rect width='400' height='400' rx='60' fill='%2303172b'/><path d='M80 120 C 50 160 50 240 80 280' stroke='%23122c47' stroke-width='24' fill='none' stroke-linecap='round'/><path d='M320 120 C 350 160 350 240 320 280' stroke='%23122c47' stroke-width='24' fill='none' stroke-linecap='round'/><path d='M120 160 H 205 M 120 160 V 260 M 120 210 H 180' stroke='white' stroke-width='28' stroke-linecap='square' fill='none'/><g transform='translate(250,200) scale(1.1)' stroke='%2300c8d7' stroke-width='14' stroke-linecap='round'><line x1='0' y1='-32' x2='0' y2='32'/><line x1='-28' y1='-16' x2='28' y2='16'/><line x1='-28' y1='16' x2='28' y2='-16'/></g></svg>";
 const LOGO_SRC = FHENIX_FAVICON_SVG;
 
 const Q=[
@@ -361,13 +362,13 @@ function drawBadgeCanvas(username, score, total, rank) {
 
   // Background
   const grad = ctx.createLinearGradient(0, 0, 600, 340);
-  grad.addColorStop(0, "#130e24");
+  grad.addColorStop(0, "#03172b");
   grad.addColorStop(1, "#0a0713");
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 600, 340);
 
   // Grid Lines
-  ctx.strokeStyle = "rgba(139, 92, 246, 0.1)";
+  ctx.strokeStyle = "rgba(0, 200, 215, 0.08)";
   ctx.lineWidth = 1;
   for (let x = 0; x < 600; x += 30) {
     ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 340); ctx.stroke();
@@ -382,7 +383,7 @@ function drawBadgeCanvas(username, score, total, rank) {
   ctx.strokeRect(12, 12, 576, 316);
 
   // Header Brand
-  ctx.fillStyle = "#38bdf8";
+  ctx.fillStyle = "#00c8d7";
   ctx.font = "bold 13px 'JetBrains Mono', monospace";
   ctx.fillText("FHENIX CONFIDENTIAL COMPUTATION", 36, 48);
 
@@ -403,14 +404,14 @@ function drawBadgeCanvas(username, score, total, rank) {
 
   // Badge Tag Box
   ctx.fillStyle = "rgba(139, 92, 246, 0.2)";
-  ctx.strokeStyle = "#38bdf8";
+  ctx.strokeStyle = "#00c8d7";
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.roundRect(36, 230, 260, 40, 20);
   ctx.fill();
   ctx.stroke();
 
-  ctx.fillStyle = "#38bdf8";
+  ctx.fillStyle = "#00c8d7";
   ctx.font = "bold 14px 'JetBrains Mono', monospace";
   ctx.fillText("🏅 " + badgeTitle, 52, 255);
 
@@ -479,7 +480,7 @@ async function done() {
 
 function share() {
   const sc = ans.filter((a, k) => a === Q[k][2]).length;
-  const txt = "I scored " + sc + "/20 on the @FhenixIO Privacy Quiz and earned the " + badge(sc / Q.length * 100) + " badge! Test your FHE knowledge:";
+  const txt = "I scored " + sc + "/20 on the @fhenix Privacy Quiz and earned the " + badge(sc / Q.length * 100) + " badge! Test your FHE knowledge:";
   window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(txt), "_blank");
 }
 </script>
