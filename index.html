@@ -450,8 +450,7 @@ setTimeout(() => {
 
 function begin() {
   const v = $("uname").value.trim().replace(/^@/, "");
-  if (!/^[A-Za-z0-9_]{1,15}$/.test(v)) {
-    $("err").textContent = "Enter a valid handle (letters, numbers, underscore).";
+  if (!/^[A-Za-z0-9_]{1,15}$/.test(v)) {$("err").textContent = "Enter a valid handle (letters, numbers, underscore).";
     return;
   }
   $("err").textContent = "";
@@ -637,6 +636,13 @@ function downloadBadge() {
   link.click();
 }
 
+function share() {
+  const sc = ans.filter((a, k) => a === Q[k][2]).length;
+  const p = Math.round((sc / Q.length) * 100);
+  const text = encodeURIComponent(`I scored ${sc}/${Q.length} (${p}%) on the @FhenixFHENIX Privacy Quiz! 🔐\n\nRanked level: ${badge(p)}\n\nTest your knowledge on Confidential Computing & CoFHE!`);
+  window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+}
+
 /* CoFHE Onchain Simulation */
 async function runCoFHEAttestation() {
   playSfx('click');
@@ -682,50 +688,40 @@ async function done() {
 
   $("lbNote").textContent = "";
   $("lbRank").textContent = "";
-  $("lb").innerHTML = '<div class="row"><span class="mono">Loading leaderboard…</span></div>';
-
-  // Answer review with Fhenix Docs links
-  $("rev").innerHTML = Q.map((q, k) => {
-    const a = ans[k];
-    const ok = a === q[2];
-    const docUrl = q[3];
-    return '<div class="row"><div>' + (k + 1) + '. ' + esc(q[0]) +
-      '<small class="' + (ok ? "ok" : "no") + '">Your answer: ' + (a === null ? "— unanswered" : L[a] + ". " + esc(q[1][a])) + '</small>' +
-      (ok ? "" : '<small class="ok">Correct: ' + L[q[2]] + ". " + esc(q[1][q[2]]) + '</small>') +
-      '<a class="doc-link" href="' + docUrl + '" target="_blank" rel="noopener">📖 Learn more in Fhenix Docs →</a>' +
-      '</div><b class="' + (ok ? "ok" : "no") + '">' + (ok ? "✓" : "✕") + '</b></div>';
-  }).join("");
+  $("lb").innerHTML = '<div class="row"><span>Loading leaderboard…</span></div>';
 
   show("res");
 
-  const { rank, total, lockedScore, top } = await submitScore(user, sc);
+  const res = await submitScore(user, sc);
 
-  drawBadgeCanvas(user, sc, Q.length, rank);
-
-  if (typeof lockedScore === "number" && lockedScore !== sc) {
-    $("lbNote").textContent = "🔒 First attempt score (" + lockedScore + "/20) is permanently locked on the leaderboard.";
-  } else {
-    $("lbNote").textContent = "✨ First attempt score recorded on the leaderboard!";
+  if (!res.isFirstAttempt) {
+    $("lbNote").textContent = "ℹ Your high score (" + res.lockedScore + " / " + Q.length + ") is locked on the leaderboard from your first attempt.";
+  }
+  if (res.rank) {
+    $("lbRank").textContent = "YOUR RANK: #" + res.rank + " of " + res.total;
   }
 
-  if (rank) {
-    $("lbRank").textContent = "YOU ARE RANKED #" + rank + " OF " + total;
-  }
-
-  const key = user.toLowerCase();
-  $("lb").innerHTML = (top && top.length ? top : []).map((r, k) => {
-    const isMe = r.u.toLowerCase() === key;
-    return '<div class="row' + (isMe ? " active-user" : "") + '">' +
-      '<div class="mono"><b>#' + (k + 1) + '</b> @' + esc(r.u) + (isMe ? ' (You)' : '') + '</div>' +
-      '<div class="mono"><b>' + r.s + '</b>/20</div>' +
-      '</div>';
+  $("lb").innerHTML = (res.top || []).map((r, idx) => {
+    const isActive = r.u.toLowerCase() === user.toLowerCase();
+    return '<div class="row' + (isActive ? ' active-user' : '') + '"><span><b>#' + (idx + 1) + '</b> @' + esc(r.u) + '</span><b>' + r.s + ' / ' + Q.length + '</b></div>';
   }).join("");
-}
 
-function share() {
-  const sc = ans.filter((a, k) => a === Q[k][2]).length;
-  const txt = "I scored " + sc + "/20 on the @fhenix Privacy Quiz and earned the " + badge(sc / Q.length * 100) + " badge! Test your FHE knowledge:";
-  window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(txt), "_blank");
+  drawBadgeCanvas(user, sc, Q.length, res.rank);
+
+  $("rev").innerHTML = Q.map((q, k) => {
+    const userAns = ans[k];
+    const isCorrect = userAns === q[2];
+    const userChoiceText = userAns !== null ? L[userAns] + ": " + esc(q[1][userAns]) : "Time Out";
+    const correctChoiceText = L[q[2]] + ": " + esc(q[1][q[2]]);
+    const docUrl = q[3];
+
+    return '<div class="row" style="flex-direction:column;align-items:flex-start">' +
+      '<div style="font-weight:700;margin-bottom:4px">Q' + (k + 1) + '. ' + esc(q[0]) + '</div>' +
+      '<div>Your Answer: <span class="' + (isCorrect ? 'ok' : 'no') + '">' + userChoiceText + '</span></div>' +
+      (!isCorrect ? '<div class="ok">Correct Answer: ' + correctChoiceText + '</div>' : '') +
+      '<a class="doc-link" href="' + docUrl + '" target="_blank" rel="noopener">📖 Read Fhenix Docs Reference →</a>' +
+    '</div>';
+  }).join("");
 }
 </script>
 </body>
