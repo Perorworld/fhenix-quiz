@@ -297,18 +297,81 @@ function playSfx(type) {
   }
 }
 
-/* Wallet Mock Connection */
+/* Functional Web3 Wallet Connection */
 let userWallet = null;
-function connectWallet() {
+
+async function connectWallet() {
   playSfx('click');
+
   if (userWallet) {
     userWallet = null;
     document.getElementById("walletBtn").textContent = "🦊 CONNECT WALLET";
     return;
   }
-  const mockAddr = "0x" + Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join("");
-  userWallet = mockAddr;
-  document.getElementById("walletBtn").textContent = mockAddr.slice(0,6) + "…" + mockAddr.slice(-4);
+
+  if (typeof window.ethereum === 'undefined') {
+    alert("No Web3 wallet found! Please install MetaMask or another Web3 extension.");
+    return;
+  }
+
+  try {
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    if (!accounts || accounts.length === 0) return;
+
+    userWallet = accounts[0];
+
+    // Attempt to switch to Fhenix Nitrogen Testnet
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: '0x7a3137' }], // 8008135 in hex
+      });
+    } catch (switchError) {
+      // Chain 8008135 has not been added to the wallet yet
+      if (switchError.code === 4902) {
+        try {
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [{
+              chainId: '0x7a3137',
+              chainName: 'Fhenix Nitrogen',
+              nativeCurrency: { name: 'Fhenix', symbol: 'tFHE', decimals: 18 },
+              rpcUrls: ['https://api.nitrogen.fhenix.zone'],
+              blockExplorerUrls: ['https://explorer.nitrogen.fhenix.zone']
+            }],
+          });
+        } catch (addError) {
+          console.error("User rejected adding network:", addError);
+        }
+      }
+    }
+
+    updateWalletUI();
+
+  } catch (error) {
+    console.error("Wallet connection failed:", error);
+  }
+}
+
+function updateWalletUI() {
+  const btn = document.getElementById("walletBtn");
+  if (userWallet) {
+    btn.textContent = userWallet.slice(0, 6) + "…" + userWallet.slice(-4);
+  } else {
+    btn.textContent = "🦊 CONNECT WALLET";
+  }
+}
+
+// Handle wallet account disconnects or account switches dynamically
+if (typeof window.ethereum !== 'undefined') {
+  window.ethereum.on('accountsChanged', (accounts) => {
+    if (accounts.length === 0) {
+      userWallet = null;
+    } else {
+      userWallet = accounts[0];
+    }
+    updateWalletUI();
+  });
 }
 
 /* Particle Confetti Canvas Engine */
